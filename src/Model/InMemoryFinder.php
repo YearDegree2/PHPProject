@@ -2,6 +2,8 @@
 
 namespace Model;
 
+use Exception\HttpException;
+
 class InMemoryFinder implements FinderInterface
 {
     private $statuses = array();
@@ -20,6 +22,9 @@ class InMemoryFinder implements FinderInterface
 
     public function findOneById($id)
     {
-        return isset($this->statuses[$id]) ? $this->statuses[$id] : null;
+        if (isset($this->statuses[$id])) {
+            return $this->statuses[$id];
+        }
+        throw new HttpException(404, 'Status doesn\'t exist');
     }
 }

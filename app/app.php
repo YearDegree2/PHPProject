@@ -3,7 +3,6 @@
 require __DIR__ . '/../autoload.php';
 
 use Model\InMemoryFinder;
-use Exception\HttpException;
 
 // Config
 $debug = true;
@@ -31,9 +30,6 @@ $app->get('/statuses', function () use ($app) {
 $app->get('/statuses/(\d+)', function ($id) use ($app) {
     $memoryFinder = new InMemoryFinder();
     $status = $memoryFinder->findOneById($id);
-    if (null === $status) {
-        throw new HttpException(404, 'Status doesn\'t exist');
-    }
 
     return $app->render('status.php', array(
         'status'  => $status
