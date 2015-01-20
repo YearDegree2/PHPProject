@@ -27,4 +27,13 @@ $app->get('/statuses', function () use ($app) {
     ));
 });
 
+$app->get('/statuses/(\d+)', function ($id) use ($app) {
+    $memoryFinder = new InMemoryFinder();
+    $status = $memoryFinder->findOneById($id);
+
+    return $app->render('status.php', array(
+        'status'  => $status
+    ));
+});
+
 return $app;
