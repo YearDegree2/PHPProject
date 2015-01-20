@@ -36,11 +36,16 @@ class Status
 
     public function getDate()
     {
-        return $this->date;
+        return $this->date->format('Y-M-d H:i');
     }
 
     public function getClientUsed()
     {
         return $this->clientUsed;
+    }
+
+    public function __toString()
+    {
+        return 'Status ' . $this->getId() . ' ' . $this->getDate() . '<br/>' . $this->getUsername() . ' on ' .$this->getClientUsed() . '<br/>' . $this->getMessage();
     }
 }
