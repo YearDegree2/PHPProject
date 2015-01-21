@@ -52,7 +52,7 @@ class JsonFinder implements FinderInterface
         file_put_contents($this->file, json_encode($statusesJson));
     }
 
-    private function createStatus($statusArray)
+    private function createStatus(array $statusArray)
     {
         return new Status(
             $statusArray['message'],
@@ -74,7 +74,7 @@ class JsonFinder implements FinderInterface
         );
     }
 
-    private function searchStatusInArray($array, $id)
+    private function searchStatusInArray(array $array, $id)
     {
         foreach ($array['statuses'] as $status) {
             if ($id == $status['id']) {
