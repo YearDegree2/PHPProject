@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../autoload.php';
 
-use Model\InMemoryFinder;
+use Model\JsonFinder;
 
 // Config
 $debug = true;
@@ -11,6 +11,8 @@ $app = new \App(new View\TemplateEngine(
     __DIR__ . '/templates/'
 ), $debug);
 
+$file = __DIR__ .  DIRECTORY_SEPARATOR . '../data/statuses.json';
+
 /**
  * Index
  */
@@ -18,8 +20,8 @@ $app->get('/', function () use ($app) {
     return $app->render('index.php');
 });
 
-$app->get('/statuses', function () use ($app) {
-    $memoryFinder = new InMemoryFinder();
+$app->get('/statuses', function () use ($app, $file) {
+    $memoryFinder = new JsonFinder($file);
     $statuses = $memoryFinder->findAll();
 
     return $app->render('statuses.php', array(
@@ -27,8 +29,8 @@ $app->get('/statuses', function () use ($app) {
     ));
 });
 
-$app->get('/statuses/(\d+)', function ($id) use ($app) {
-    $memoryFinder = new InMemoryFinder();
+$app->get('/statuses/(\d+)', function ($id) use ($app, $file) {
+    $memoryFinder = new JsonFinder($file);
     $status = $memoryFinder->findOneById($id);
 
     return $app->render('status.php', array(
