@@ -12,4 +12,5 @@ $cache_map = array (
   'Model\\FinderInterface' => '/var/www/uframework/src/Model/FinderInterface.php',
   'Model\\Status' => '/var/www/uframework/src/Model/Status.php',
   'Model\\JsonFinder' => '/var/www/uframework/src/Model/JsonFinder.php',
+  'Http\\Request' => '/var/www/uframework/src/Http/Request.php',
 );

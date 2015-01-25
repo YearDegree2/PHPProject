@@ -3,6 +3,7 @@
 require __DIR__ . '/../autoload.php';
 
 use Model\JsonFinder;
+use Http\Request;
 
 // Config
 $debug = true;
@@ -20,7 +21,7 @@ $app->get('/', function () use ($app) {
     return $app->render('index.php');
 });
 
-$app->get('/statuses', function () use ($app, $file) {
+$app->get('/statuses', function (Request $request) use ($app, $file) {
     $memoryFinder = new JsonFinder($file);
     $statuses = $memoryFinder->findAll();
 
@@ -29,7 +30,7 @@ $app->get('/statuses', function () use ($app, $file) {
     ));
 });
 
-$app->get('/statuses/(\d+)', function ($id) use ($app, $file) {
+$app->get('/statuses/(\d+)', function (Request $request, $id) use ($app, $file) {
     $memoryFinder = new JsonFinder($file);
     $status = $memoryFinder->findOneById($id);
 
