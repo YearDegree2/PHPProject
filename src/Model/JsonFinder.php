@@ -30,16 +30,9 @@ class JsonFinder implements FinderInterface
 
     public function findOneById($id)
     {
-        $statusesJson = json_decode(file_get_contents($this->file), FILE_USE_INCLUDE_PATH);
-        if (null === $statusesJson) {
-            throw new HttpException(404, 'No statuses');
-        }
-        $status = $this->searchStatusInArray($statusesJson, $id);
-        if (null === $status) {
-            throw new HttpException(404, 'Status ' . $id . ' not exists');
-        }
+        $statuses = self::findAll();
 
-        return $this->createStatus($status);
+        return $this->searchStatusInSimpleArray($statuses, $id);
     }
 
     public function addStatus(Status $status)
@@ -78,6 +71,17 @@ class JsonFinder implements FinderInterface
     {
         foreach ($array['statuses'] as $status) {
             if ($id == $status['id']) {
+                return $status;
+            }
+        }
+
+        return null;
+    }
+
+    private function searchStatusInSimpleArray(array $statuses, $id)
+    {
+        foreach ($statuses as $status) {
+            if ($id == $status->getId()) {
                 return $status;
             }
         }
