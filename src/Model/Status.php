@@ -44,6 +44,13 @@ class Status
         return $this->clientUsed;
     }
 
+    public static function getNextId($file)
+    {
+        $finder = new JsonFinder($file);
+
+        return $finder->findNextStatusId();
+    }
+
     public function __toString()
     {
         return 'Status ' . $this->getId() . ' ' . $this->getDate() . '<br/>' . $this->getUsername() . ' on ' .$this->getClientUsed() . '<br/>' . $this->getMessage();

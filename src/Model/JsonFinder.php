@@ -30,16 +30,9 @@ class JsonFinder implements FinderInterface
 
     public function findOneById($id)
     {
-        $statusesJson = json_decode(file_get_contents($this->file), FILE_USE_INCLUDE_PATH);
-        if (null === $statusesJson) {
-            throw new HttpException(404, 'No statuses');
-        }
-        $status = $this->searchStatusInArray($statusesJson, $id);
-        if (null === $status) {
-            throw new HttpException(404, 'Status ' . $id . ' not exists');
-        }
+        $statuses = self::findAll();
 
-        return $this->createStatus($status);
+        return $this->searchStatusInSimpleArray($statuses, $id);
     }
 
     public function addStatus(Status $status)
@@ -74,6 +67,17 @@ class JsonFinder implements FinderInterface
         );
     }
 
+    public function deleteStatus(Status $status)
+    {
+        $arrayStatuses = json_decode(file_get_contents($this->file), FILE_USE_INCLUDE_PATH);
+        foreach ($arrayStatuses['statuses'] as $key => $statusInArray) {
+            if ($statusInArray['id'] == $status->getId()) {
+                unset($arrayStatuses['statuses'][$key]);
+                file_put_contents($this->file, json_encode($arrayStatuses));
+            }
+        }
+    }
+
     private function searchStatusInArray(array $array, $id)
     {
         foreach ($array['statuses'] as $status) {
@@ -83,5 +87,23 @@ class JsonFinder implements FinderInterface
         }
 
         return null;
+    }
+
+    private function searchStatusInSimpleArray(array $statuses, $id)
+    {
+        foreach ($statuses as $status) {
+            if ($id == $status->getId()) {
+                return $status;
+            }
+        }
+
+        return null;
+    }
+
+    public function findNextStatusId()
+    {
+        $arrayStatuses = self::findAll();
+
+        return (end($arrayStatuses) !== false) ? end($arrayStatuses)->getId() + 1 : 0;
     }
 }

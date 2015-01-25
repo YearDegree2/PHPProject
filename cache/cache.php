@@ -13,4 +13,5 @@ $cache_map = array (
   'Model\\Status' => '/var/www/uframework/src/Model/Status.php',
   'Model\\JsonFinder' => '/var/www/uframework/src/Model/JsonFinder.php',
   'Http\\Request' => '/var/www/uframework/src/Http/Request.php',
+  'HttpException' => '/var/www/uframework/src/Exception/HttpException.php',
 );
