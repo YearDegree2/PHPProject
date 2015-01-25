@@ -105,8 +105,11 @@ class App
 
     public function run(Request $request = null)
     {
-        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : Request::GET;
-        $uri    = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+        if (null === $request) {
+            $request = Request::createFromGlobals();
+        }
+        $method = $request->getMethod();
+        $uri    = $request->getUri();
 
         foreach ($this->routes as $route) {
             if ($route->match($method, $uri)) {
