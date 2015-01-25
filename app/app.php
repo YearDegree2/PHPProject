@@ -3,6 +3,7 @@
 require __DIR__ . '/../autoload.php';
 
 use Model\JsonFinder;
+use Model\Status;
 use Http\Request;
 
 // Config
@@ -37,6 +38,13 @@ $app->get('/statuses/(\d+)', function (Request $request, $id) use ($app, $file) 
     return $app->render('status.php', array(
         'status'  => $status,
     ));
+});
+
+$app->post('/statuses', function (Request $request) use ($app, $file) {
+    $memoryFinder = new JsonFinder($file);
+    $username = $request->getParameter('username');
+    $message = $request->getParameter('message');
+    $memoryFinder->addStatus(new Status($message, Status::getNextId($file), $username, new DateTime()));
 });
 
 return $app;

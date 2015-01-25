@@ -84,4 +84,11 @@ class JsonFinder implements FinderInterface
 
         return null;
     }
+
+    public function findNextStatusId()
+    {
+        $arrayStatuses = self::findAll();
+
+        return (end($arrayStatuses) !== false) ? end($arrayStatuses)->getId() + 1 : 0;
+    }
 }
