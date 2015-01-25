@@ -67,6 +67,17 @@ class JsonFinder implements FinderInterface
         );
     }
 
+    public function deleteStatus(Status $status)
+    {
+        $arrayStatuses = json_decode(file_get_contents($this->file), FILE_USE_INCLUDE_PATH);
+        foreach ($arrayStatuses['statuses'] as $key => $statusInArray) {
+            if ($statusInArray['id'] == $status->getId()) {
+                unset($arrayStatuses['statuses'][$key]);
+                file_put_contents($this->file, json_encode($arrayStatuses));
+            }
+        }
+    }
+
     private function searchStatusInArray(array $array, $id)
     {
         foreach ($array['statuses'] as $status) {
