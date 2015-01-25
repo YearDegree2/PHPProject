@@ -45,6 +45,8 @@ $app->post('/statuses', function (Request $request) use ($app, $file) {
     $username = $request->getParameter('username');
     $message = $request->getParameter('message');
     $memoryFinder->addStatus(new Status($message, Status::getNextId($file), $username, new DateTime()));
+
+    $app->redirect('/statuses');
 });
 
 return $app;
