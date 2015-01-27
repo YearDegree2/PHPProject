@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../autoload.php';
+require __DIR__ . DIRECTORY_SEPARATOR . '../vendor/autoload.php';
 
 use Model\JsonFinder;
 use Model\Status;
