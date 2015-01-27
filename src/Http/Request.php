@@ -2,7 +2,7 @@
 
 namespace Http;
 
-use Negotiation\Negotiator;
+use Negotiation\FormatNegotiator;
 
 class Request
 {
@@ -71,7 +71,7 @@ class Request
 
     public function guessBestFormat()
     {
-        $negotiator = new Negotiator();
+        $negotiator = new FormatNegotiator();
         $acceptHeader = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : "text/html";
         $priorities   = array('html', 'application/json', 'application/xml', '*/*');
 
