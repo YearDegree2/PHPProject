@@ -73,7 +73,7 @@ class Request
     {
         $negotiator = new Negotiator();
         $acceptHeader = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : "text/html";
-        $priorities   = array('html', 'application/json', '*/*');
+        $priorities   = array('html', 'application/json', 'application/xml', '*/*');
 
         return $negotiator->getBestFormat($acceptHeader, $priorities);
     }
