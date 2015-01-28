@@ -1,6 +1,7 @@
 {
   "require": {
-    "willdurand/negotiation": "~1.3"
+    "willdurand/negotiation": "~1.3",
+    "symfony/serializer": "~2.6"
   },
   "autoload": {
     "psr-0": {
