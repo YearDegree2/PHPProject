@@ -30,7 +30,7 @@ class StatusTest extends \TestCase
 
     public function testGetDate()
     {
-        $this->assertEquals($this->date->format('Y-M-d H:i'), $this->status->getDate());
+        $this->assertEquals($this->date->format('Y-m-d H:i'), $this->status->getDate());
     }
 
     public function testGetClientUsed()
