@@ -36,7 +36,7 @@ class Status
 
     public function getDate()
     {
-        return $this->date->format('Y-M-d H:i');
+        return $this->date->format('Y-m-d H:i');
     }
 
     public function getClientUsed()
