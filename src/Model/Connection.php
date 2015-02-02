@@ -2,21 +2,22 @@
 
 namespace Model;
 
-class Connection
+class Connection extends \PDO
 {
-    private $pdo;
-
     public function __construct($db_type, $db_name, $db_host, $db_user, $db_password)
     {
         try {
-            $this->pdo = new \PDO($db_type . ':dbname=' . $db_name . ';host=' . $db_host, $db_user, $db_password);
+            parent::__construct($db_type . ':dbname=' . $db_name . ';host=' . $db_host, $db_user, $db_password);
         } catch (\PDOException $e) {
             echo 'Can\'t contact database : ' . $e->getMessage();
         }
     }
 
-    public function getConnection()
+    public function executeQuery($query, $parameters = null)
     {
-        return $this->pdo;
+        $preparedQuery = $this->prepare($query);
+        $preparedQuery->execute($parameters);
+
+        return $preparedQuery;
     }
 }

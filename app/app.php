@@ -20,9 +20,8 @@ $app = new \App(new View\TemplateEngine(
     __DIR__ . '/templates/'
 ), $debug);
 
-$file = __DIR__ .  DIRECTORY_SEPARATOR . '../data/statuses.json';
 $connection = new Connection("mysql", "uframework", "localhost", "uframework", "passw0rd");
-$memoryFinder = new DatabaseFinder($connection->getConnection());
+$memoryFinder = new DatabaseFinder($connection);
 $encoders = array(new XmlEncoder(), new JsonEncoder());
 $normalizers = array(new GetSetMethodNormalizer());
 $serializer = new Serializer($normalizers, $encoders);

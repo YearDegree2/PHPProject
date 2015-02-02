@@ -4,20 +4,21 @@ namespace Model;
 
 class DatabaseFinder implements FinderInterface
 {
-    private $databaseConnection;
+    private $connection;
 
-    public function __construct($databaseConnection)
+    public function __construct($connection)
     {
-        $this->databaseConnection = $databaseConnection;
+        $this->connection = $connection;
     }
 
     public function findAll()
     {
-        $preparedQuery = $this->databaseConnection->prepare("SELECT * FROM statuses");
-        $preparedQuery->execute();
+        $query = "SELECT * FROM statuses";
+        $results = $this->connection->executeQuery($query);
+        $results = $results->fetchALL(\PDO::FETCH_ASSOC);
 
         $arrayStatuses = array();
-        foreach ($preparedQuery->fetchALL(\PDO::FETCH_ASSOC) as $result) {
+        foreach ($results as $result) {
             array_push($arrayStatuses, new Status($result['content'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']));
         }
 
@@ -26,31 +27,31 @@ class DatabaseFinder implements FinderInterface
 
     public function findOneById($id)
     {
-        $preparedQuery = $this->databaseConnection->prepare("SELECT * FROM statuses WHERE id = :id");
-        $values = [':id' => $id];
-        $preparedQuery->execute($values);
+        $query = "SELECT * FROM statuses WHERE id = :id";
+        $parameters = [':id' => $id];
 
-        $result = $preparedQuery->fetch(\PDO::FETCH_ASSOC);
+        $result = $this->connection->executeQuery($query, $parameters);
+        $result = $result->fetch(\PDO::FETCH_ASSOC);
 
         return ($result !== false) ? new Status($result['content'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']) : null;
     }
 
     public function addStatus(Status $status)
     {
-        $preparedQuery = $this->databaseConnection->prepare("INSERT INTO statuses (username, content, date, clientused) VALUES (:username, :message, :date, :clientused)");
-        $values = [
+        $query = "INSERT INTO statuses (username, content, date, clientused) VALUES (:username, :message, :date, :clientused)";
+        $parameters = [
             ':username'     => $status->getUsername(),
             ':message'      => $status->getMessage(),
             ':date'         => $status->getDate(),
             ':clientused'   => $status->getClientUsed(),
         ];
-        $preparedQuery->execute($values);
+        $this->connection->executeQuery($query, $parameters);
     }
 
     public function deleteStatus(Status $status)
     {
-        $preparedQuery = $this->databaseConnection->prepare("DELETE FROM statuses WHERE id = :id");
-        $values = [':id' => $status->getId()];
-        $preparedQuery->execute($values);
+        $query = "DELETE FROM statuses WHERE id = :id";
+        $parameters = [':id' => $status->getId()];
+        $this->connection->executeQuery($query, $parameters);
     }
 }
