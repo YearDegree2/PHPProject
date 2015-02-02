@@ -5,6 +5,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . '../vendor/autoload.php';
 use Model\Connection;
 use Model\DatabaseFinder;
 use Model\Status;
+use Model\StatusDataMapper;
 use Http\Request;
 use Http\Response;
 use Exception\HttpException;
@@ -25,6 +26,7 @@ $memoryFinder = new DatabaseFinder($connection);
 $encoders = array(new XmlEncoder(), new JsonEncoder());
 $normalizers = array(new GetSetMethodNormalizer());
 $serializer = new Serializer($normalizers, $encoders);
+$statusDataMapper = new StatusDataMapper($connection);
 
 /**
  * Index
@@ -82,11 +84,14 @@ $app->get('/statuses/(\d+)', function (Request $request, $id) use ($app, $memory
     $response->send();
 });
 
-$app->post('/statuses', function (Request $request) use ($app, $memoryFinder) {
+$app->post('/statuses', function (Request $request) use ($app, $statusDataMapper) {
     $username = null != $request->getParameter('username') ? $request->getParameter('username') : 'Anonymous';
     $message = $request->getParameter('message');
     $status = new Status($message, null, $username, new DateTime());
-    $memoryFinder->addStatus($status);
+    $value = $statusDataMapper->persist($status);
+    if (null === $value) {
+        throw new HttpException(400, 'Status content too large');
+    }
     $format = $request->guessBestFormat();
     if ('json' !== $format) {
         $app->redirect('/statuses');
@@ -101,12 +106,12 @@ $app->post('/statuses', function (Request $request) use ($app, $memoryFinder) {
     $response->send();
 });
 
-$app->delete('/statuses/(\d+)', function (Request $request, $id) use ($app, $memoryFinder) {
+$app->delete('/statuses/(\d+)', function (Request $request, $id) use ($app, $memoryFinder, $statusDataMapper) {
     $status = $memoryFinder->findOneById($id);
     if (null === $status) {
         throw new HttpException(404, 'Status ' . $id . ' not exists');
     }
-    $memoryFinder->deleteStatus($status);
+    $statusDataMapper->remove($status);
     $format = $request->guessBestFormat();
     if ('json' !== $format) {
         $app->redirect('/statuses');
