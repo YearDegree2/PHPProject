@@ -2,7 +2,8 @@
 
 require __DIR__ . DIRECTORY_SEPARATOR . '../vendor/autoload.php';
 
-use Model\JsonFinder;
+use Model\Connection;
+use Model\DatabaseFinder;
 use Model\Status;
 use Http\Request;
 use Http\Response;
@@ -20,7 +21,8 @@ $app = new \App(new View\TemplateEngine(
 ), $debug);
 
 $file = __DIR__ .  DIRECTORY_SEPARATOR . '../data/statuses.json';
-$memoryFinder = new JsonFinder($file);
+$connection = new Connection("mysql", "uframework", "localhost", "uframework", "passw0rd");
+$memoryFinder = new DatabaseFinder($connection->getConnection());
 $encoders = array(new XmlEncoder(), new JsonEncoder());
 $normalizers = array(new GetSetMethodNormalizer());
 $serializer = new Serializer($normalizers, $encoders);
@@ -81,10 +83,10 @@ $app->get('/statuses/(\d+)', function (Request $request, $id) use ($app, $memory
     $response->send();
 });
 
-$app->post('/statuses', function (Request $request) use ($app, $file, $memoryFinder) {
-    $username = $request->getParameter('username');
+$app->post('/statuses', function (Request $request) use ($app, $memoryFinder) {
+    $username = null != $request->getParameter('username') ? $request->getParameter('username') : 'Anonymous';
     $message = $request->getParameter('message');
-    $status = new Status($message, Status::getNextId($file), $username, new DateTime());
+    $status = new Status($message, null, $username, new DateTime());
     $memoryFinder->addStatus($status);
     $format = $request->guessBestFormat();
     if ('json' !== $format) {
