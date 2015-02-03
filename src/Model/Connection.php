@@ -13,11 +13,26 @@ class Connection extends \PDO
         }
     }
 
-    public function executeQuery($query, $parameters = null)
+    public function executeQuery($query, array $parameters = array())
     {
         $preparedQuery = $this->prepare($query);
-        $preparedQuery->execute($parameters);
+        foreach ($parameters as $key => $value) {
+            $this->bind($preparedQuery, $key, $value);
+        }
+        $preparedQuery->execute();
 
         return $preparedQuery;
+    }
+
+    private function bind($query, $key, $value)
+    {
+        switch ($key) {
+            case ':limit':
+                $query->bindValue($key, $value, self::PARAM_INT);
+                break;
+            default:
+                $query->bindValue($key, $value, self::PARAM_STR);
+                break;
+        }
     }
 }

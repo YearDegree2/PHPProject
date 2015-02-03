@@ -11,10 +11,33 @@ class StatusFinder implements FinderInterface
         $this->connection = $connection;
     }
 
-    public function findAll()
+    public function findAll($limit = null, $orderBy = null, $direction = null)
     {
+
+        $columns = array(
+            'message',
+            'id',
+            'username',
+            'date',
+            'clientUsed',
+        );
+
         $query = "SELECT * FROM statuses";
-        $results = $this->connection->executeQuery($query);
+        if (null === $orderBy || !in_array($orderBy, $columns)) {
+            $query .= " ORDER BY id ";
+            $query .= ('ASC' === $direction) ? "ASC" : "DESC";
+        }
+        if (null !== $orderBy && in_array($orderBy, $columns)) {
+            $query .= " ORDER BY " . $orderBy . " ";
+            $query .= ('ASC' === $direction) ? "ASC" : "DESC";
+        }
+        $parameters = array();
+        if (null !== $limit && $limit > 0) {
+            $query .= " LIMIT 0, :limit";
+            $parameters[':limit'] = $limit;
+        }
+
+        $results = $this->connection->executeQuery($query, $parameters);
         $results = $results->fetchALL(\PDO::FETCH_ASSOC);
 
         $arrayStatuses = array();
