@@ -38,5 +38,7 @@ class StatusDataMapper implements DataMapperInterface
         $query = "DELETE FROM statuses WHERE id = :id";
         $parameters = [':id' => $status->getId()];
         $this->connection->executeQuery($query, $parameters);
+
+        return true;
     }
 }
