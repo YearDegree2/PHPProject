@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class DatabaseFinder implements FinderInterface
+class StatusFinder implements FinderInterface
 {
     private $connection;
 

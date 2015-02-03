@@ -3,7 +3,7 @@
 require __DIR__ . DIRECTORY_SEPARATOR . '../vendor/autoload.php';
 
 use Model\Connection;
-use Model\DatabaseFinder;
+use Model\StatusFinder;
 use Model\Status;
 use Model\StatusDataMapper;
 use Http\Request;
@@ -22,7 +22,7 @@ $app = new \App(new View\TemplateEngine(
 ), $debug);
 
 $connection = new Connection("mysql", "uframework", "localhost", "uframework", "passw0rd");
-$memoryFinder = new DatabaseFinder($connection);
+$memoryFinder = new StatusFinder($connection);
 $encoders = array(new XmlEncoder(), new JsonEncoder());
 $normalizers = array(new GetSetMethodNormalizer());
 $serializer = new Serializer($normalizers, $encoders);
@@ -32,7 +32,7 @@ $statusDataMapper = new StatusDataMapper($connection);
  * Index
  */
 $app->get('/', function () use ($app) {
-    return $app->render('index.php');
+    $app->redirect('/statuses');
 });
 
 $app->get('/statuses', function (Request $request) use ($app, $memoryFinder, $serializer) {
