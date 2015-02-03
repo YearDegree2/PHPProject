@@ -89,8 +89,11 @@ $app->post('/statuses', function (Request $request) use ($app, $statusDataMapper
     $message = $request->getParameter('message');
     $status = new Status($message, null, $username, new DateTime());
     $value = $statusDataMapper->persist($status);
-    if (null === $value) {
+    if (-1 === $value) {
         throw new HttpException(400, 'Status content too large');
+    }
+    if (-2 === $value) {
+        throw new HttpException(400, 'Status content empty');
     }
     $format = $request->guessBestFormat();
     if ('json' !== $format) {

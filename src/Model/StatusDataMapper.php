@@ -15,7 +15,11 @@ class StatusDataMapper implements DataMapperInterface
     {
         // Status length max : 140 characters
         if (mb_strlen($status->getMessage()) > 140) {
-            return null;
+            return -1;
+        }
+        // Content empty
+        if ('' === $status->getMessage()) {
+            return -2;
         }
         $query = "INSERT INTO statuses (username, content, date, clientused) VALUES (:username, :message, :date, :clientused)";
         $parameters = [
