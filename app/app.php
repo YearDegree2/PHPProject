@@ -36,7 +36,7 @@ $app->get('/', function () use ($app) {
 });
 
 $app->get('/statuses', function (Request $request) use ($app, $memoryFinder, $serializer) {
-    $statuses = $memoryFinder->findAll();
+    $statuses = $memoryFinder->findAll(intval($request->getParameter("limit"), 10), $request->getParameter("orderBy"), $request->getParameter("direction"));
     $format = $request->guessBestFormat();
     if ('json' !== $format && 'xml' !== $format) {
         return $app->render('statuses.php', array(

@@ -7,9 +7,9 @@
 <body>
     <h1>Status list</h1>
     <?php
-        foreach ($parameters['statuses'] as $status) {
+        foreach ($parameters['statuses'] as $status) :
             echo $status . '<br/><br/><br/>';
-        }
+        endforeach;
     ?>
     <form action="/statuses" method="POST">
         <label for="username">Username:</label>
