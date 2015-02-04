@@ -21,7 +21,7 @@ class StatusDataMapper implements DataMapperInterface
         if ('' === $status->getMessage()) {
             return -2;
         }
-        $query = "INSERT INTO statuses (username, content, date, clientused) VALUES (:username, :message, :date, :clientused)";
+        $query = "INSERT INTO statuses (username, message, date, clientused) VALUES (:username, :message, :date, :clientused)";
         $parameters = [
             ':username'     => $status->getUsername(),
             ':message'      => $status->getMessage(),

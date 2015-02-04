@@ -42,7 +42,7 @@ class StatusFinder implements FinderInterface
 
         $arrayStatuses = array();
         foreach ($results as $result) {
-            array_push($arrayStatuses, new Status($result['content'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']));
+            array_push($arrayStatuses, new Status($result['message'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']));
         }
 
         return $arrayStatuses;
@@ -56,6 +56,6 @@ class StatusFinder implements FinderInterface
         $result = $this->connection->executeQuery($query, $parameters);
         $result = $result->fetch(\PDO::FETCH_ASSOC);
 
-        return ($result !== false) ? new Status($result['content'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']) : null;
+        return ($result !== false) ? new Status($result['message'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']) : null;
     }
 }
