@@ -22,8 +22,9 @@ class UserDataMapper
             ':username' => trim($user->getUsername()),
             ':password' => $passwordHash,
         ];
+        $this->connection->executeQuery($query, $parameters);
 
-        return $this->connection->executeQuery($query, $parameters);
+        return true;
     }
 
     private function hashPassword($password)
