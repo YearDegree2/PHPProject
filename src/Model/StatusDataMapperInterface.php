@@ -2,7 +2,7 @@
 
 namespace Model;
 
-interface DataMapperInterface
+interface StatusDataMapperInterface
 {
     /**
      * Save a status.

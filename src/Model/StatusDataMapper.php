@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class StatusDataMapper implements DataMapperInterface
+class StatusDataMapper implements StatusDataMapperInterface
 {
     private $connection;
 
