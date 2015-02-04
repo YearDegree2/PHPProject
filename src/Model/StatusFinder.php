@@ -11,9 +11,8 @@ class StatusFinder implements FinderInterface
         $this->connection = $connection;
     }
 
-    public function findAll($limit = null, $orderBy = null, $direction = null)
+    public function findAll($limit = null, $orderBy = null, $direction = null, $username = null)
     {
-
         $columns = array(
             'message',
             'id',
@@ -23,6 +22,11 @@ class StatusFinder implements FinderInterface
         );
 
         $query = "SELECT * FROM statuses";
+        $parameters = array();
+        if (null !== $username) {
+            $query .= " WHERE username = :username";
+            $parameters[':username'] = $username;
+        }
         if (null === $orderBy || !in_array($orderBy, $columns)) {
             $query .= " ORDER BY id ";
             $query .= ('ASC' === $direction) ? "ASC" : "DESC";
@@ -31,7 +35,6 @@ class StatusFinder implements FinderInterface
             $query .= " ORDER BY " . $orderBy . " ";
             $query .= ('ASC' === $direction) ? "ASC" : "DESC";
         }
-        $parameters = array();
         if (null !== $limit && $limit > 0) {
             $query .= " LIMIT 0, :limit";
             $parameters[':limit'] = $limit;
@@ -42,7 +45,7 @@ class StatusFinder implements FinderInterface
 
         $arrayStatuses = array();
         foreach ($results as $result) {
-            array_push($arrayStatuses, new Status($result['content'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']));
+            array_push($arrayStatuses, new Status($result['message'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']));
         }
 
         return $arrayStatuses;
@@ -56,6 +59,6 @@ class StatusFinder implements FinderInterface
         $result = $this->connection->executeQuery($query, $parameters);
         $result = $result->fetch(\PDO::FETCH_ASSOC);
 
-        return ($result !== false) ? new Status($result['content'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']) : null;
+        return ($result !== false) ? new Status($result['message'], $result['id'], $result['username'], new \DateTime($result['date']), $result['clientused']) : null;
     }
 }

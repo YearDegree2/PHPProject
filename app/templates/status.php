@@ -6,11 +6,19 @@
 </head>
 <body>
     <?php
+        require_once 'connection.php';
         echo $parameters['status'];
+
+        if (isset($_SESSION['username'])) {
+            if ($_SESSION['username'] === $parameters['status']->getUsername()) {
+                ?>
+                <form action="/statuses/<?= $parameters['status']->getId() ?>" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="submit" value="Delete">
+                </form>
+            <?php
+            }
+        }
     ?>
-    <form action="/statuses/<?= $parameters['status']->getId() ?>" method="POST">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="submit" value="Delete">
-    </form>
 </body>
 </html>
