@@ -12,6 +12,7 @@
     <div class="container">
         <div id="login">
             <form method="post" action="/login">
+                <h3><span class="label label-default">Log In</span></h3>
                 <div class="form-group">
                     <label for="loginF">Login</label>
                     <input type="text" placeholder="Enter login" name="login" id="loginF" class="form-control"/>
